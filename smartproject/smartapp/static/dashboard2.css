@@ -1,0 +1,132 @@
+/* General */
+body {
+    font-family: 'Inter', sans-serif;
+    background: #F1F5F9;
+    margin: 0;
+    color: #0F172A;
+}
+
+.container {
+    display: flex;
+}
+
+/* Dashboard Content Layout */
+.main-content {
+    flex: 1;
+    padding: 40px 60px;
+}
+
+
+/* Cards */
+.cards {
+    display: flex;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.card {
+    flex: 1;
+    background: #FFFFFF;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.card .icon {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.card .label {
+    color: #64748B;
+    font-size: 14px;
+}
+
+.card .value {
+    font-size: 24px;
+    font-weight: 600;
+}
+
+/* Chart Section */
+.chart-section {
+    margin-top: 40px;
+    background: #FFFFFF;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.chart-section .subtitle {
+    color: #64748B;
+    font-size: 14px;
+}
+
+.chart-placeholder {
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #94A3B8;
+    border: 1px dashed #CBD5E1;
+    margin-top: 20px;
+    border-radius: 12px;
+}
+
+/* Table Section */
+.table-section {
+    margin-top: 40px;
+    background: #FFFFFF;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.table-section .subtitle {
+    color: #64748B;
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+table th,
+table td {
+    padding: 12px 15px;
+    text-align: left;
+}
+
+table th {
+    font-weight: 600;
+    color: #64748B;
+    font-size: 14px;
+}
+
+table tr:nth-child(even) {
+    background: #F8FAFC;
+}
+
+.badge {
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    display: inline-block;
+}
+
+.in-stock {
+    background: #DCFCE7;
+    color: #16A34A;
+}
+
+.low-stock {
+    background: #FEF3C7;
+    color: #CA8A04;
+}
+
+.out-stock {
+    background: #FEE2E2;
+    color: #B91C1C;
+}

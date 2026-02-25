@@ -1,0 +1,123 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Customer Management - SmartStock</title>
+    <link rel="stylesheet" href="{% static 'dashboard2.css' %}">
+    <link rel="stylesheet" href="{% static 'navbar.css' %}">
+    <link rel="stylesheet" href="{% static 'customer_modern.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container">
+        {% include 'sidebar.html' with active_nav='customers' %}
+        <main class="main-content">
+            {% include 'topbar.html' with page_title='Customer Management' %}
+            <div class="customers-container">
+                <div class="stats-grid">
+                    <div class="stats-left">
+                        <div class="stat-card">
+                            <div class="stat-icon blue"><i class="fas fa-users"></i></div>
+                            <div class="stat-label">Total Customers</div>
+                            <h2 class="stat-value">{{ total_customers }}</h2>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon purple"><i class="fas fa-crown"></i></div>
+                            <div class="stat-label">Regular Customers</div>
+                            <h2 class="stat-value">{{ regular_customers_count }}</h2>
+                        </div>
+                    </div>
+
+                    <div class="top-customers-card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-star" style="color: #F59E0B;"></i> Top Customers</h3>
+                        </div>
+                        <div class="top-cust-list">
+                            {% for rc in regular_customers %}
+                            <div class="top-cust-item">
+                                <div class="cust-avatar">{{ rc.name|slice:":1"|upper }}</div>
+                                <div class="cust-details">
+                                    <span class="cust-name">{{ rc.name }}</span>
+                                    <span class="cust-orders">{{ rc.total_purchases }} Orders</span>
+                                </div>
+                            </div>
+                            {% empty %}
+                            <div class="empty-state">No regular customers yet.</div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                <div class="customers-content">
+                    <div class="main-column">
+                        <div class="form-card">
+                            <h2>Add New Customer</h2>
+                            <form method="POST" class="form-grid">
+                                {% csrf_token %}
+                                <input type="text" name="name" class="form-input" placeholder="Full Name" required>
+                                <input type="text" name="phone" class="form-input" placeholder="Phone Number" required>
+                                <input type="email" name="email" class="form-input" placeholder="Email Address">
+                                <button type="submit" class="btn-submit">Add Customer</button>
+                            </form>
+                        </div>
+                        <div class="table-card">
+                            <div class="table-header">
+                                <h2>All Customers</h2>
+                                <div class="table-search" style="max-width:300px;width:100%;">
+                                    <i class="fas fa-search" style="color:#64748B;"></i>
+                                    <input type="text" id="cust-search" placeholder="Search by name..."
+                                        autocomplete="off" style="border:none;outline:none;width:100%;font-size:14px;">
+                                </div>
+                            </div>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Phone</th>
+                                        <th>Email</th>
+                                        <th>Purchases</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="cust-table-body">
+                                    {% for customer in customers %}
+                                    <tr class="cust-row">
+                                        <td class="cust-name-cell">{{ customer.name }}</td>
+                                        <td>{{ customer.phone }}</td>
+                                        <td>{{ customer.email|default:"-" }}</td>
+                                        <td>{{ customer.total_purchases }} Orders</td>
+                                    </tr>
+                                    {% empty %}
+                                    <tr>
+                                        <td colspan="4">No customers found.</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script>
+        const input = document.getElementById('cust-search');
+        if (input) {
+            input.addEventListener('input', () => {
+                const q = input.value.toLowerCase();
+                const rows = document.querySelectorAll('.cust-row');
+                rows.forEach(row => {
+                    const nameCell = row.querySelector('.cust-name-cell');
+                    if (nameCell) {
+                        const name = nameCell.textContent.toLowerCase();
+                        row.style.display = name.includes(q) ? '' : 'none';
+                    }
+                });
+            });
+        }
+    </script>
+</body>
+
+</html>

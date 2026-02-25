@@ -1,0 +1,89 @@
+{% load static %}
+<header class="topbar">
+    <div class="page-title">
+        <h1>{{ page_title|default:"SmartStock" }}</h1>
+    </div>
+    <div class="header-actions">
+        <div class="search-container">
+            <i class="fas fa-search" style="color: #64748B;"></i>
+            <input type="text" id="global-search-input" placeholder="Search products, customers..." autocomplete="off">
+            <div id="search-results" class="search-results-dropdown"></div>
+        </div>
+        <button class="btn-primary" onclick="location.href='{% url 'add_product_view' %}'">
+            <i class="fas fa-plus"></i> Add Product
+        </button>
+        <div class="notification" style="font-size: 20px; cursor: pointer;">🔔</div>
+        <div class="profile-circle"
+            style="background: #2563EB; color: white; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; font-weight: 600;">
+            JD</div>
+    </div>
+</header>
+
+<script>
+    // Dynamic Topbar Scrolling Effect
+    const topbar = document.querySelector('.topbar');
+    if (topbar) {
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 20) {
+                topbar.classList.add('scrolled');
+            } else {
+                topbar.classList.remove('scrolled');
+            }
+        });
+    }
+
+    // Global Search Logic
+    const gSearchInput = document.getElementById('global-search-input');
+    const gSearchResults = document.getElementById('search-results');
+    let gSearchTimeout;
+
+    if (gSearchInput) {
+        gSearchInput.addEventListener('input', () => {
+            clearTimeout(gSearchTimeout);
+            const query = gSearchInput.value.trim();
+
+            if (query.length < 2) {
+                gSearchResults.style.display = 'none';
+                return;
+            }
+
+            gSearchTimeout = setTimeout(() => {
+                fetch(`/smart/search/?q=${encodeURIComponent(query)}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        gSearchResults.innerHTML = '';
+                        if (data.results.length > 0) {
+                            data.results.forEach(item => {
+                                const div = document.createElement('div');
+                                div.className = 'search-result-item';
+                                const icon = item.type === 'product' ? '📦' : (item.type === 'customer' ? '👤' : '🗂️');
+                                div.innerHTML = `
+                                    <span class="result-icon">${icon}</span>
+                                    <div class="result-info">
+                                        <span class="result-name">${item.name}</span>
+                                        <span class="result-type">${item.type.toUpperCase()}</span>
+                                    </div>
+                                `;
+                                div.onclick = () => {
+                                    gSearchInput.value = item.name;
+                                    gSearchResults.style.display = 'none';
+                                };
+                                gSearchResults.appendChild(div);
+                            });
+                            gSearchResults.style.display = 'block';
+                        } else {
+                            gSearchResults.innerHTML = '<div class="search-no-results">No results found</div>';
+                            gSearchResults.style.display = 'block';
+                        }
+                    });
+            }, 300);
+        });
+
+        // Close results when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!gSearchInput.contains(e.target) && !gSearchResults.contains(e.target)) {
+                gSearchResults.style.display = 'none';
+            }
+        });
+    }
+</script>

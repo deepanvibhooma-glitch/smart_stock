@@ -1,0 +1,361 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Login & Signup - SmartStock</title>
+    <link rel="stylesheet" href="{% static 'dashboard2.css' %}">
+    <link rel="stylesheet" href="{% static 'landing.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .auth-main {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: radial-gradient(at 0% 0%, rgba(212, 165, 165, 0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(239, 227, 200, 0.2) 0px, transparent 50%),
+                #FFFFFF;
+            position: relative;
+            overflow: hidden;
+            padding: 20px;
+        }
+
+        /* Decorative Background Elements */
+        .decor-blob {
+            position: absolute;
+            filter: blur(80px);
+            z-index: 0;
+            opacity: 0.5;
+            border-radius: 50%;
+            animation: pulse-decor 8s ease-in-out infinite;
+        }
+
+        .blob-1 {
+            width: 400px;
+            height: 400px;
+            background: var(--dusty-pink);
+            top: -100px;
+            right: -100px;
+        }
+
+        .blob-2 {
+            width: 300px;
+            height: 300px;
+            background: var(--accent-gold);
+            bottom: -50px;
+            left: -50px;
+            animation-delay: -4s;
+        }
+
+        .blob-3 {
+            width: 200px;
+            height: 200px;
+            background: var(--dusty-pink);
+            top: 40%;
+            left: 10%;
+            opacity: 0.2;
+            animation-delay: -2s;
+        }
+
+        .pattern-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%232c2c2c' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            z-index: 1;
+        }
+
+        @keyframes pulse-decor {
+
+            0%,
+            100% {
+                transform: scale(1) translate(0, 0);
+            }
+
+            50% {
+                transform: scale(1.1) translate(20px, -20px);
+            }
+        }
+
+        .auth-container {
+            background: white;
+            padding: 48px;
+            width: 100%;
+            max-width: 450px;
+            border-radius: 24px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
+            text-align: center;
+            z-index: 2;
+            animation: fadeInUp 0.8s ease-out;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .auth-logo {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--charcoal);
+            margin-bottom: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .auth-logo i {
+            color: var(--dusty-pink);
+        }
+
+        h2 {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--charcoal);
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            color: #64748B;
+            font-size: 15px;
+            margin-bottom: 32px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: #475569;
+            margin-bottom: 8px;
+        }
+
+        .input-with-icon {
+            position: relative;
+        }
+
+        .input-with-icon i {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94A3B8;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px 16px 12px 48px;
+            border: 2px solid #F1F5F9;
+            border-radius: 12px;
+            font-family: 'Inter', sans-serif;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--dusty-pink);
+            background: white;
+            box-shadow: 0 0 0 4px rgba(212, 165, 165, 0.1);
+        }
+
+        .btn-auth {
+            width: 100%;
+            padding: 14px;
+            background: var(--charcoal);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 12px;
+            box-shadow: 0 10px 20px -5px rgba(44, 44, 44, 0.3);
+        }
+
+        .btn-auth:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px -8px rgba(44, 44, 44, 0.4);
+        }
+
+        .switch-text {
+            margin-top: 24px;
+            color: #64748B;
+            font-size: 14px;
+        }
+
+        .link-btn {
+            background: none;
+            border: none;
+            color: var(--dusty-pink);
+            font-weight: 700;
+            cursor: pointer;
+            padding: 0;
+            margin-left: 4px;
+        }
+
+        .link-btn:hover {
+            text-decoration: underline;
+        }
+
+        .form {
+            display: none;
+        }
+
+        .form.active {
+            display: block;
+        }
+
+        .messages {
+            margin-bottom: 20px;
+        }
+
+        .alert {
+            padding: 12px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .alert-error {
+            background: #FEE2E2;
+            color: #DC2626;
+            border: 1px solid #FECACA;
+        }
+    </style>
+</head>
+
+<body>
+
+    <main class="auth-main">
+        <div class="pattern-overlay"></div>
+        <div class="decor-blob blob-1"></div>
+        <div class="decor-blob blob-2"></div>
+        <div class="decor-blob blob-3"></div>
+
+        <div class="auth-container">
+            <div class="auth-logo">
+                <i class="fas fa-cubes"></i>
+                SmartStock
+            </div>
+
+            {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    {{ message }}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <!-- LOGIN FORM -->
+            <div id="loginForm" class="form {% if not signup %}active{% endif %}">
+                <h2>Welcome Back</h2>
+                <p class="subtitle">Enter your credentials to access your store</p>
+
+                <form method="POST" action="{% url 'login' %}">
+                    {% csrf_token %}
+                    <div class="input-group">
+                        <label>Username</label>
+                        <div class="input-with-icon">
+                            <i class="fas fa-user"></i>
+                            <input type="text" name="username" placeholder="john_doe" required>
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Password</label>
+                        <div class="input-with-icon">
+                            <i class="fas fa-lock"></i>
+                            <input type="password" name="password" placeholder="••••••••" required>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-auth">Sign In</button>
+                </form>
+
+                <p class="switch-text">
+                    Don't have an account?
+                    <button class="link-btn" onclick="showSignup()">Create Account</button>
+                </p>
+            </div>
+
+            <!-- SIGNUP FORM -->
+            <div id="signupForm" class="form {% if signup %}active{% endif %}">
+                <h2>Join SmartStock</h2>
+                <p class="subtitle">Start managing your inventory with precision</p>
+
+                <form method="POST" action="{% url 'signup' %}">
+                    {% csrf_token %}
+                    <div class="input-group">
+                        <label>Full Name</label>
+                        <div class="input-with-icon">
+                            <i class="fas fa-id-card"></i>
+                            <input type="text" name="first_name" placeholder="John Doe" required>
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Username</label>
+                        <div class="input-with-icon">
+                            <i class="fas fa-user"></i>
+                            <input type="text" name="username" placeholder="john_doe" required>
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Email Address</label>
+                        <div class="input-with-icon">
+                            <i class="fas fa-envelope"></i>
+                            <input type="email" name="email" placeholder="john@example.com" required>
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Password</label>
+                        <div class="input-with-icon">
+                            <i class="fas fa-lock"></i>
+                            <input type="password" name="password" placeholder="••••••••" required>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-auth">Create Free Account</button>
+                </form>
+
+                <p class="switch-text">
+                    Already have an account?
+                    <button class="link-btn" onclick="showLogin()">Sign In</button>
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        function showSignup() {
+            document.getElementById("loginForm").classList.remove("active");
+            document.getElementById("signupForm").classList.add("active");
+        }
+
+        function showLogin() {
+            document.getElementById("signupForm").classList.remove("active");
+            document.getElementById("loginForm").classList.add("active");
+        }
+
+        // Auto-switch based on URL hash if provided
+        if (window.location.hash === '#signup') {
+            showSignup();
+        }
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,283 @@
+/* Add Product Page Layout */
+.add-product-container {
+    padding: 0;
+    display: grid;
+    grid-template-columns: 7fr 5fr;
+    gap: 30px;
+    align-items: start;
+}
+
+/* Form Area */
+.form-card {
+    background: white;
+    border-radius: 20px;
+    padding: 32px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.form-header {
+    margin-bottom: 32px;
+}
+
+.form-header h2 {
+    font-size: 20px;
+    font-weight: 700;
+    color: #0F172A;
+    margin-bottom: 8px;
+}
+
+.form-group {
+    margin-bottom: 24px;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.label {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: #334155;
+    margin-bottom: 10px;
+}
+
+.label span {
+    color: #EF4444;
+}
+
+input[type="text"],
+input[type="number"],
+textarea,
+select {
+    width: 100%;
+    padding: 12px 16px;
+    border-radius: 12px;
+    border: 1px solid #E2E8F0;
+    background: #F8FAFC;
+    font-family: inherit;
+    font-size: 14px;
+    transition: all 0.2s;
+    outline: none;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+    border-color: #3B82F6;
+    background: white;
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+}
+
+textarea {
+    resize: none;
+    min-height: 120px;
+}
+
+/* Input Decorations */
+.input-with-icon {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-icon {
+    position: absolute;
+    left: 16px;
+    color: #94A3B8;
+    font-size: 14px;
+}
+
+.input-with-icon input {
+    padding-left: 36px;
+}
+
+/* Status Toggle */
+.status-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 44px;
+    height: 24px;
+}
+
+.switch input {
+    display: none;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #E2E8F0;
+    transition: .4s;
+    border-radius: 24px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+input:checked+.slider {
+    background-color: #3B82F6;
+}
+
+input:checked+.slider:before {
+    transform: translateX(20px);
+}
+
+/* Buttons */
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 16px;
+    margin-top: 40px;
+    padding-top: 32px;
+    border-top: 1px solid #F1F5F9;
+}
+
+.btn-secondary {
+    padding: 12px 32px;
+    border-radius: 12px;
+    background: white;
+    border: 1px solid #E2E8F0;
+    color: #64748B;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.btn-primary {
+    padding: 12px 48px;
+    border-radius: 12px;
+    background: #2563EB;
+    color: white;
+    border: none;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.btn-primary:active {
+    transform: scale(0.98);
+}
+
+/* Preview Card */
+.preview-sticky {
+    position: sticky;
+    top: 100px;
+}
+
+.preview-card {
+    background: white;
+    border-radius: 20px;
+    padding: 24px;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+    border: 1px solid #F1F5F9;
+}
+
+.preview-header {
+    border-bottom: 1px solid #F1F5F9;
+    padding-bottom: 16px;
+    margin-bottom: 24px;
+}
+
+.preview-header h3 {
+    font-size: 16px;
+    font-weight: 700;
+    color: #1E293B;
+}
+
+.image-placeholder {
+    width: 100%;
+    aspect-ratio: 1;
+    background: #F8FAFC;
+    border: 2px dashed #E2E8F0;
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #94A3B8;
+    margin-bottom: 24px;
+}
+
+.image-placeholder i {
+    font-size: 48px;
+    margin-bottom: 12px;
+}
+
+.preview-details {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.detail-item .label-sm {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #94A3B8;
+    margin-bottom: 4px;
+    display: block;
+}
+
+.detail-item .value {
+    font-weight: 700;
+    color: #0F172A;
+    font-size: 18px;
+}
+
+.preview-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    background: #F0FDF4;
+    color: #16A34A;
+}
+
+.status-badge.inactive {
+    background: #FEF2F2;
+    color: #EF4444;
+}
+
+.status-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+}
+
+@media (max-width: 1024px) {
+    .add-product-container {
+        grid-template-columns: 1fr;
+    }
+}

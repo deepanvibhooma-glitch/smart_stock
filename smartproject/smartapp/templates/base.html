@@ -1,0 +1,46 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>SmartStock</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <!-- CSS -->
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <h2 class="logo">SmartStock</h2>
+        <ul class="menu">
+            <li class="active">Dashboard</li>
+            <li>Inventory</li>
+            <li>Add Product</li>
+            <li>Categories</li>
+            <li>Reports</li>
+            <li>Settings</li>
+        </ul>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Top Navbar -->
+        <header class="topbar">
+            <h1>Page Title</h1>
+            <div class="topbar-right">
+                <input type="text" placeholder="Search..." class="search-bar">
+                <div class="profile-circle"></div>
+            </div>
+        </header>
+
+        <!-- Page Content -->
+        <section class="content">
+            {% block content %}
+            {% endblock %}
+        </section>
+    </div>
+
+</body>
+</html>

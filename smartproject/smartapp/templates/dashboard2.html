@@ -1,0 +1,146 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>SmartStock Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="{% static 'dashboard2.css' %}">
+    <link rel="stylesheet" href="{% static 'navbar.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+</head>
+
+<body>
+
+    <div class="container">
+        {% include 'sidebar.html' with active_nav='dashboard' %}
+
+        <!-- Main Content -->
+        <div class="main-content">
+            {% include 'topbar.html' with page_title='Dashboard' %}
+
+
+            <!-- Dashboard Cards -->
+            <div class="cards">
+                <div class="card">
+                    <div class="icon">📦</div>
+                    <p class="label">Total Products</p>
+                    <h2 class="value">{{ total_products|default:"0" }}</h2>
+                </div>
+                <div class="card">
+                    <div class="icon">⚠️</div>
+                    <p class="label">Low Stock</p>
+                    <h2 class="value">{{ low_stock_count|default:"0" }}</h2>
+                </div>
+                <div class="card">
+                    <div class="icon">🗂️</div>
+                    <p class="label">Total Categories</p>
+                    <h2 class="value">{{ total_categories|default:"0" }}</h2>
+                </div>
+                <div class="card">
+                    <div class="icon">💲</div>
+                    <p class="label">Total Sales</p>
+                    <h2 class="value">₹{{ total_revenue|default:"0" }}</h2>
+                </div>
+            </div>
+
+            <!-- Stock Trends Section -->
+            <div class="chart-section">
+                <h3>Stock Trends</h3>
+                <p class="subtitle">Monthly inventory levels overview</p>
+                <div class="chart-placeholder" style="height: auto; min-height: 250px;">
+                    <canvas id="stockChart" style="width: 100%; height: 250px;"></canvas>
+                </div>
+            </div>
+
+            <!-- Recent Inventory Table -->
+            <div class="table-section">
+                <h3>Recent Inventory</h3>
+                <p class="subtitle">Latest product stock updates</p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Category</th>
+                            <th>Stock</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for product in recent_products %}
+                        <tr>
+                            <td>
+                                <div style="display: flex; align-items: center; gap: 12px;">
+                                    <div
+                                        style="width: 32px; height: 32px; border-radius: 6px; overflow: hidden; background: #F1F5F9; border: 1px solid #E2E8F0; flex-shrink: 0;">
+                                        <img src="{{ product.image_url }}" alt=""
+                                            style="width: 100%; height: 100%; object-fit: cover;">
+                                    </div>
+                                    <span style="font-weight: 500;">{{ product.name }}</span>
+                                </div>
+                            </td>
+                            <td>{{ product.category.name|default:"Uncategorized" }}</td>
+                            <td>{{ product.stock }}</td>
+                            <td>
+                                {% if product.stock == 0 %}
+                                <span class="badge out-stock">Out of Stock</span>
+                                {% elif product.stock <= 5 %} <span class="badge low-stock">Low Stock</span>
+                                    {% else %}
+                                    <span class="badge in-stock">In Stock</span>
+                                    {% endif %}
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="4" style="text-align: center;">No products found</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+
+
+
+    <script>
+        // Chart Implementation
+        const ctx = document.getElementById('stockChart').getContext('2d');
+        const stockChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: {{ chart_labels| safe }},
+        datasets: [{
+            label: 'Sales Revenue (₹)',
+            data: {{ chart_data| safe }},
+            backgroundColor: 'rgba(37, 99, 235, 0.2)',
+            borderColor: 'rgba(37, 99, 235, 1)',
+            borderWidth: 2,
+            tension: 0.4,
+            fill: true
+        }]
+    },
+        options: {
+            responsive: true,
+                maintainAspectRatio: false,
+                    plugins: {
+                legend: { display: false },
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                        ticks: {
+                        callback: function(value) { return '₹' + value; }
+                    }
+                }
+            }
+        }
+});
+
+    </script>
+</body>
+
+</html>

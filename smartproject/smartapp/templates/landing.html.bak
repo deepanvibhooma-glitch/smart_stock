@@ -1,0 +1,54 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>SmartStock - Premium Inventory Management</title>
+    <link rel="stylesheet" href="{% static 'dashboard2.css' %}">
+    <link rel="stylesheet" href="{% static 'navbar.css' %}">
+    <link rel="stylesheet" href="{% static 'landing.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+</head>
+
+<body>
+
+    <div class="container">
+        {% include 'sidebar.html' with active_nav='home' %}
+
+        <main class="main-content landing-main">
+            <!-- No topbar needed for pure landing, but keeping space if required -->
+
+            <section class="hero-section">
+                <div class="shape shape-1"></div>
+                <div class="shape shape-2"></div>
+
+                <div class="hero-content">
+                    <span class="hero-tagline">Advanced Solutions</span>
+                    <h1 class="hero-title">Product Inventory <br>Evolution.</h1>
+                    <p class="hero-description">
+                        Streamline your entire warehouse workflow with our premium,
+                        3D-powered management system. Track stock, manage categories,
+                        and generate invoices with pixel-perfect precision.
+                    </p>
+                    <div class="hero-actions">
+                        <a href="{% url 'dashboard2' %}" class="btn-landing btn-primary-landing">
+                            Get Started <i class="fas fa-arrow-right"></i>
+                        </a>
+                        <a href="{% url 'products2' %}" class="btn-landing btn-secondary-landing">
+                            Explore Inventory
+                        </a>
+                    </div>
+                </div>
+
+                <div class="hero-image-container">
+                    <img src="{% static 'isometric_hero.png' %}" alt="SmartStock Isometric View" class="isometric-hero">
+                </div>
+            </section>
+        </main>
+    </div>
+
+</body>
+
+</html>

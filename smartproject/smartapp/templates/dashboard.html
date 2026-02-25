@@ -1,0 +1,112 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>SmartStock Dashboard</title>
+    <link rel="stylesheet" href="{% static 'dashboard.css' %}">
+    
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+</head>
+
+
+<body>
+    {% include 'header.html' %}
+    <br>
+
+
+    <div class="dashboard-container">
+
+        <!-- HERO SECTION -->
+        <section class="hero">
+            <div>
+                <h1>Welcome to SmartStock</h1>
+                <p>
+                    Manage your products, customers, and billing effortlessly.
+                    Built for small businesses to grow smarter.
+                </p>
+            </div>
+            <div class="hero-actions">
+                <button onclick="window.location.href='/smart/products/'">Add Product</button>
+                <button class="secondary" onclick="window.location.href='/smart/billing/'">Generate Bill</button>
+            </div>
+        </section>
+
+        <!-- STATS CARDS -->
+        <section class="stats">
+            <div class="card">
+                <i class="fa-solid fa-box"></i>
+                <h2>{{ total_products }}</h2>
+                <p>Total Products</p>
+            </div>
+
+            <div class="card">
+                <i class="fa-solid fa-users"></i>
+                <h2>{{ total_customers }}</h2>
+                <p>Total Customers</p>
+            </div>
+
+            <div class="card">
+                <i class="fa-solid fa-chart-line"></i>
+                <h2>₹ {{ month_revenue|floatformat:2 }}</h2>
+                <p>This Month Revenue</p>
+            </div>
+
+            <div class="card warning">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                <h2>{{ low_stock_count }}</h2>
+                <p>Low Stock Alerts</p>
+            </div>
+        </section>
+
+       
+
+        <!-- HOW SMARTSTOCK HELPS -->
+        <section class="features">
+            <h2>How SmartStock Helps Small Business Owners</h2>
+            <div class="feature-grid">
+
+                <div class="feature-box">
+                    <i class="fa-solid fa-clock"></i>
+                    <h3>Saves Time</h3>
+                    <p>Automates stock updates and billing instantly.</p>
+                </div>
+
+                <div class="feature-box">
+                    <i class="fa-solid fa-chart-pie"></i>
+                    <h3>Better Insights</h3>
+                    <p>Understand your best-selling products & regular customers.</p>
+                </div>
+
+                <div class="feature-box">
+                    <i class="fa-solid fa-shield-halved"></i>
+                    <h3>Reduces Loss</h3>
+                    <p>Low stock alerts prevent inventory shortages.</p>
+                </div>
+
+                <div class="feature-box">
+                    <i class="fa-solid fa-rocket"></i>
+                    <h3>Boosts Growth</h3>
+                    <p>Helps scale small businesses with smart data tracking.</p>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- RECENT ACTIVITY -->
+        <section class="activity">
+            <h2>Recent Activity</h2>
+            <ul>
+                {% for act in recent_activity %}
+                <li>{{ act }}</li>
+                {% empty %}
+                <li><i>No recent activity...</i></li>
+                {% endfor %}
+            </ul>
+        </section>
+
+    </div>
+    {% include 'footer.html' %}
+</body>
+
+</html>

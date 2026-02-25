@@ -1,0 +1,149 @@
+﻿{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Billing Workspace - SmartStock</title>
+    <link rel="stylesheet" href="{% static 'dashboard2.css' %}">
+    <link rel="stylesheet" href="{% static 'navbar.css' %}">
+    <link rel="stylesheet" href="{% static 'billing_modern.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <script src="{% static 'billing_modern.js' %}"></script>
+</head>
+
+<body>
+    <div class="container">
+        {% include 'sidebar.html' with active_nav='billing' %}
+        <main class="main-content">
+            {% include 'topbar.html' with page_title='Billing Workspace' %}
+            <div class="billing-container">
+                <div class="billing-card customer-info-card">
+                    <h2>Customer Information</h2>
+                    <div class="entry-form">
+                        <div class="form-row flex-row">
+                            <div class="field-col">
+                                <label class="field-label">Customer Name</label>
+                                <input type="text" id="customer-name" class="billing-input"
+                                    placeholder="Search or enter customer name" list="customer-list">
+                                <datalist id="customer-list">
+                                    {% for c in customers %}
+                                    <option value="{{ c.name }}" data-phone="{{ c.phone }}">
+                                        {% endfor %}
+                                </datalist>
+                            </div>
+                            <div class="field-col">
+                                <label class="field-label">Customer Phone</label>
+                                <input type="text" id="customer-phone" class="billing-input"
+                                    placeholder="e.g. 91XXXXXXXXXX">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mode-switcher">
+                    <button id="btn-manual" class="mode-btn active"><i class="fas fa-keyboard"></i> Manual
+                        Entry</button>
+                    <button id="btn-chat" class="mode-btn"><i class="fas fa-comments"></i> Chat Billing</button>
+                </div>
+                <div class="billing-grid">
+                    <div class="main-column">
+                        <div id="manual-mode" class="billing-card">
+                            <h2>Add Items</h2>
+                            <div class="entry-form">
+                                <div class="input-group">
+                                    <div>
+                                        <label class="field-label">Product Name</label>
+                                        <input type="text" id="pname" class="billing-input" placeholder="Select Product"
+                                            list="product-list">
+                                        <datalist id="product-list">
+                                            {% for p in products %}
+                                            <option value="{{ p.name }}" data-price="{{ p.price }}">
+                                                {% endfor %}
+                                        </datalist>
+                                    </div>
+                                    <div>
+                                        <label class="field-label">Qty</label>
+                                        <input type="number" id="qty" class="billing-input" placeholder="0">
+                                    </div>
+                                    <div>
+                                        <label class="field-label">Price (₹)</label>
+                                        <input type="number" id="price" class="billing-input" placeholder="0.00">
+                                    </div>
+                                    <button onclick="addItem()" class="btn-add-item"><i
+                                            class="fas fa-plus"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="chat-mode" class="billing-card">
+                            <h2>Paste Chat Order</h2>
+                            <textarea id="chat-input" class="chat-textarea"
+                                placeholder="Example:&#10;Saree 2 1200&#10;Kurti 1 800"></textarea>
+                            <p style="font-size: 12px; color: #94A3B8; margin-top: 12px;">Format: [Product Name]
+                                [Quantity] [Price]</p>
+                        </div>
+                        <div class="billing-card" style="margin-top: 32px; padding: 0; overflow: hidden;">
+                            <table class="item-table">
+                                <thead>
+                                    <tr>
+                                        <th>Product</th>
+                                        <th>Qty</th>
+                                        <th>Price</th>
+                                        <th>Total</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="item-tbody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="side-column">
+                        <div class="billing-card summary-card">
+                            <h2>Order Summary</h2>
+                            <div class="summary-details">
+                                <div class="summary-row"><span>Subtotal</span><span>₹<span
+                                            id="display-subtotal">0.00</span></span></div>
+                                <div class="summary-row"><span>GST (5%)</span><span>₹<span
+                                            id="display-tax">0.00</span></span></div>
+                                <div class="summary-row total"><span>Total</span><span>₹<span
+                                            id="display-total">0.00</span></span></div>
+                            </div>
+                            <div class="summary-actions">
+                                <button onclick="generateBill()" class="btn-generate"><i
+                                        class="fas fa-file-invoice"></i> Generate Invoice</button>
+                                <button onclick="sendToWhatsApp()" class="btn-whatsapp"><i class="fab fa-whatsapp"></i>
+                                    Send to WhatsApp</button>
+                            </div>
+                        </div>
+                        <div class="billing-card recent-sales-card">
+                            <h2>Recent Sales</h2>
+                            {% for bill in recent_bills %}
+                            <div class="sale-item" style="display: flex; align-items: center; gap: 12px;">
+                                <div
+                                    style="width: 40px; height: 40px; border-radius: 8px; overflow: hidden; background: #F8FAFC; border: 1px solid #E2E8F0; flex-shrink: 0;">
+                                    <img src="{{ bill.product.image_url }}" alt=""
+                                        style="width: 100%; height: 100%; object-fit: cover;">
+                                </div>
+                                <div style="flex-grow: 1;">
+                                    <div class="sale-customer">
+                                        {{ bill.customer.name }}
+                                    </div>
+                                    <div class="sale-product-qty">
+                                        {{ bill.product.name }} (x{{ bill.quantity }})
+                                    </div>
+                                </div>
+                                <div class="sale-amount">₹{{ bill.total_price }}</div>
+                            </div>
+                            {% empty %}
+                            <p class="empty-sales">No bills generated yet.</p>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+
+</html>

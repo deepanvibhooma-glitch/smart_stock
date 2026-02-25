@@ -1,0 +1,132 @@
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background: #F7F7F7;
+    /* var(--light-bg) */
+    margin: 0;
+    padding: 30px;
+    color: #2C2C2C;
+    /* var(--base-charcoal) */
+}
+
+.container {
+    max-width: 1100px;
+    margin: auto;
+}
+
+h1 {
+    font-size: 28px;
+    margin-bottom: 20px;
+    font-weight: 600;
+}
+
+h2 {
+    font-size: 18px;
+    margin-bottom: 15px;
+    font-weight: 500;
+    color: #2C2C2C;
+}
+
+.card {
+    background: #ffffff;
+    padding: 20px;
+    margin-bottom: 25px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.highlight {
+    border-left: 4px solid #D4A5A5;
+    /* var(--primary-pink) */
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    align-items: center;
+}
+
+input {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+input:focus {
+    outline: none;
+    border-color: #D4A5A5;
+    /* var(--primary-pink) */
+}
+
+button {
+    padding: 10px 18px;
+    border: none;
+    border-radius: 6px;
+    background: #D4A5A5;
+    /* var(--primary-pink) */
+    color: white;
+    cursor: pointer;
+    font-weight: 500;
+    transition: 0.2s ease;
+}
+
+button:hover {
+    background: #B3A0B3;
+    /* var(--hover-lavender) */
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th {
+    text-align: left;
+    padding: 12px;
+    font-size: 13px;
+    color: #777;
+    border-bottom: 1px solid #eee;
+}
+
+td {
+    padding: 12px;
+    border-bottom: 1px solid #f1f1f1;
+    font-size: 14px;
+}
+
+tr:hover {
+    background: #fafafa;
+}
+
+.regular-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.regular-card {
+    background: #EFE3C8;
+    /* var(--bg-cream) */
+    padding: 15px;
+    border-radius: 8px;
+    width: 200px;
+}
+
+.regular-card h3 {
+    margin: 0 0 5px 0;
+    font-size: 15px;
+}
+
+.regular-card p {
+    margin: 0;
+    font-size: 13px;
+    color: #666;
+}
+
+.regular-card span {
+    font-size: 12px;
+    color: #D4A5A5;
+    /* var(--primary-pink) */
+    font-weight: 500;
+}

@@ -1,0 +1,127 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Settings - SmartStock</title>
+    <link rel="stylesheet" href="{% static 'dashboard2.css' %}">
+    <link rel="stylesheet" href="{% static 'navbar.css' %}">
+    <link rel="stylesheet" href="{% static 'settings.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+</head>
+
+<body>
+
+    <div class="container">
+        {% include 'sidebar.html' with active_nav='settings' %}
+
+        <main class="main-content">
+            {% include 'topbar.html' with page_title='Settings' %}
+
+            <div class="settings-container">
+                <form method="POST" action="{% url 'settings_view' %}">
+                    {% csrf_token %}
+
+                    <div class="settings-grid">
+                        <!-- Store Profile -->
+                        <div class="settings-card">
+                            <h2><i class="fas fa-store"></i> Store Profile</h2>
+                            <div class="form-group">
+                                <label class="field-label">Store Name</label>
+                                <input type="text" name="store_name" class="settings-input"
+                                    value="{{ settings.store_name }}">
+                            </div>
+                            <div class="form-group">
+                                <label class="field-label">Owner Name</label>
+                                <input type="text" name="owner_name" class="settings-input"
+                                    value="{{ settings.owner_name }}">
+                            </div>
+                            <div class="form-group">
+                                <label class="field-label">Address</label>
+                                <textarea name="address" class="settings-input" rows="3"
+                                    style="resize: none;">{{ settings.address }}</textarea>
+                            </div>
+                        </div>
+
+                        <!-- Contact & Identity -->
+                        <div class="settings-card">
+                            <h2><i class="fas fa-id-card"></i> Contact & Identity</h2>
+                            <div class="form-group">
+                                <label class="field-label">Phone Number</label>
+                                <input type="text" name="phone" class="settings-input" value="{{ settings.phone }}">
+                            </div>
+                            <div class="form-group">
+                                <label class="field-label">Email Address</label>
+                                <input type="email" name="email" class="settings-input" value="{{ settings.email }}">
+                            </div>
+                            <div class="form-group">
+                                <label class="field-label">GST Number</label>
+                                <input type="text" name="gst_number" class="settings-input"
+                                    value="{{ settings.gst_number }}">
+                            </div>
+                        </div>
+
+                        <!-- App Preferences -->
+                        <div class="settings-card">
+                            <h2><i class="fas fa-sliders-h"></i> App Preferences</h2>
+                            <div class="form-group">
+                                <label class="field-label">Default Tax Rate (GST %)</label>
+                                <input type="number" step="0.01" name="tax_rate" class="settings-input"
+                                    value="{{ settings.default_tax_rate }}">
+                            </div>
+                            <div class="setting-item">
+                                <div class="setting-info">
+                                    <h4>Dark Mode</h4>
+                                    <p>Coming soon to SmartStock</p>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" disabled>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            <div class="setting-item">
+                                <div class="setting-info">
+                                    <h4>Low Stock Alerts</h4>
+                                    <p>Notify when products hit base level</p>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Account Security -->
+                        <div class="settings-card">
+                            <h2><i class="fas fa-shield-alt"></i> Security</h2>
+                            <div class="setting-item">
+                                <div class="setting-info">
+                                    <h4>Two-Factor Auth</h4>
+                                    <p>Secure your store dashboard</p>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            <p style="font-size: 13px; color: #64748B; margin-top: 16px;">
+                                <i class="fas fa-info-circle"></i> Password changes are managed via admin portal.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="btn-save-group">
+                        <button type="submit" class="btn-primary">
+                            <i class="fas fa-save"></i> Save All Changes
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </main>
+    </div>
+
+</body>
+
+</html>

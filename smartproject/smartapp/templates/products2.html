@@ -1,0 +1,201 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventory | SmartStock</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'product3.css' %}">
+    <link rel="stylesheet" href="{% static 'navbar.css' %}">
+</head>
+
+<body>
+
+    <div class="container">
+        {% include 'sidebar.html' with active_nav='inventory' %}
+
+        <!-- Main Content -->
+        <main class="main-content">
+            {% include 'topbar.html' with page_title='Product Inventory' %}
+
+            {% if messages %}
+            <div class="messages" style="margin-top: 24px;">
+                {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}" style="padding: 12px 16px; border-radius: 12px; margin-bottom: 8px; font-weight: 500; 
+                    {% if message.tags == 'error' %} background: #FEE2E2; color: #DC2626; border: 1px solid #FECACA; 
+                    {% elif message.tags == 'success' %} background: #DCFCE7; color: #16A34A; border: 1px solid #BBF7D0; 
+                    {% else %} background: #F1F5F9; color: #475569; border: 1px solid #E2E8F0; {% endif %}">
+                    {{ message.message }}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+
+            <!-- Stats Grid -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon blue"><i class="fas fa-box"></i></div>
+                    <div class="stat-label">Total Products</div>
+                    <h2 class="stat-value">{{ total_products|default:"0" }}</h2>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon orange"><i class="fas fa-exclamation-triangle"></i></div>
+                    <div class="stat-label">Low Stock Items</div>
+                    <h2 class="stat-value">{{ low_stock_count|default:"0" }}</h2>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon red"><i class="fas fa-times-circle"></i></div>
+                    <div class="stat-label">Out of Stock Items</div>
+                    <h2 class="stat-value">{{ out_of_stock_count|default:"0" }}</h2>
+                </div>
+            </div>
+
+            <!-- Filter Bar -->
+            <div class="filter-bar">
+                <div class="filter-search">
+                    <i class="fas fa-search" style="color: #64748B;"></i>
+                    <input type="text" id="inventory-search-input" placeholder="Search products by name or SKU.."
+                        autocomplete="off">
+                    <div id="inventory-search-results" class="search-results-dropdown"></div>
+                </div>
+                <select class="filter-dropdown">
+                    <option>All Categories</option>
+                </select>
+                <select class="filter-dropdown">
+                    <option>All Status</option>
+                </select>
+                <select class="filter-dropdown">
+                    <option>Newest</option>
+                </select>
+            </div>
+
+            <!-- Table Section -->
+            <div class="table-container">
+                <div class="table-stats-info">
+                    Showing {{ products|length }} products
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Category</th>
+                            <th>Price</th>
+                            <th>Stock</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for product in products %}
+                        <tr>
+                            <td>
+                                <div class="product-row">
+                                    <div class="product-img">
+                                        <img src="{{ product.image_url }}" alt="{{ product.name }}"
+                                            style="width: 100%; height: 100%; object-fit: cover;">
+                                    </div>
+                                    <strong>{{ product.name }}</strong>
+                                </div>
+                            </td>
+                            <td><span class="category-badge">{{ product.category.name|default:"General" }}</span></td>
+                            <td>₹{{ product.price }}</td>
+                            <td>{{ product.stock }}</td>
+                            <td>
+                                {% if product.stock == 0 %}
+                                <span class="status-badge out-stock">Out of Stock</span>
+                                {% elif product.stock <= 5 %} <span class="status-badge low-stock">Low Stock</span>
+                                    {% else %}
+                                    <span class="status-badge in-stock">In Stock</span>
+                                    {% endif %}
+                            </td>
+                            <td>
+                                <div class="action-btns">
+                                    <button class="btn-icon"><i class="far fa-eye"></i></button>
+                                    <button class="btn-icon"><i class="far fa-edit"></i></button>
+                                    <form action="{% url 'delete_product' product.id %}" method="POST"
+                                        style="display:inline;"
+                                        onsubmit="return confirm('Are you sure you want to delete this product?');">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn-icon" style="color: #ef4444;"><i
+                                                class="far fa-trash-alt"></i></button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="6" style="text-align: center; padding: 40px; color: #64748B;">
+                                No products found in inventory.
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const searchInput = document.getElementById('inventory-search-input');
+        const searchResults = document.getElementById('inventory-search-results');
+        let searchTimeout;
+
+        searchInput.addEventListener('input', () => {
+            clearTimeout(searchTimeout);
+            const query = searchInput.value.trim();
+
+            if (query.length < 2) {
+                searchResults.style.display = 'none';
+                return;
+            }
+
+            searchTimeout = setTimeout(() => {
+                fetch(`/smart/search/?q=${encodeURIComponent(query)}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        searchResults.innerHTML = '';
+                        // Filter results to only show products
+                        const products = data.results.filter(item => item.type === 'product');
+
+                        if (products.length > 0) {
+                            products.forEach(item => {
+                                const div = document.createElement('div');
+                                div.className = 'search-result-item';
+                                div.innerHTML = `
+                                    <div style="width: 32px; height: 32px; border-radius: 4px; overflow: hidden; margin-right: 12px; background: #EEE; flex-shrink: 0;">
+                                        <img src="${item.image}" style="width: 100%; height: 100%; object-fit: cover;">
+                                    </div>
+                                    <div class="result-info">
+                                        <span class="result-name">${item.name}</span>
+                                        <span class="result-type">PRODUCT</span>
+                                    </div>
+                                `;
+                                div.onclick = () => {
+                                    searchInput.value = item.name;
+                                    searchResults.style.display = 'none';
+                                    // Could filter table here
+                                };
+                                searchResults.appendChild(div);
+                            });
+                            searchResults.style.display = 'block';
+                        } else {
+                            searchResults.innerHTML = '<div class="search-no-results">No products found</div>';
+                            searchResults.style.display = 'block';
+                        }
+                    });
+            }, 300);
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
+                searchResults.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+
+</html>

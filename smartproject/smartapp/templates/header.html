@@ -1,0 +1,119 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+</head>
+
+<body>
+
+    <header class="main-header">
+        <div class="header-left">
+            <div class="logo">
+                <i class="fa-solid fa-cube"></i>
+                <span>SmartStock</span>
+            </div>
+
+            <nav class="nav-links">
+                <a href="/smart/dashboard2/">Dashboard</a>
+                <a href="/smart/products/">Products</a>
+                <a href="/smart/customers/">Customers</a>
+                <a href="/smart/billing/">Billing</a>
+
+            </nav>
+        </div>
+
+        <div class="header-right">
+            <div class="search-container">
+                <div class="search-box">
+                    <i class="fa-solid fa-search"></i>
+                    <input type="text" id="searchInput" placeholder="Search products, customers..." autocomplete="off">
+                </div>
+                <!-- Dropdown for Results -->
+                <div class="search-results" id="searchResults" style="display: none;"></div>
+            </div>
+
+            <div class="icon-btn">
+                <i class="fa-regular fa-bell"></i>
+            </div>
+
+            <div class="profile">
+                <div class="profile-circle">SS</div>
+                <span>Admin</span>
+            </div>
+        </div>
+    </header>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const searchInput = document.getElementById("searchInput");
+            const resultsContainer = document.getElementById("searchResults");
+            let debounceTimer;
+
+            searchInput.addEventListener("input", function () {
+                clearTimeout(debounceTimer);
+                const query = this.value.trim();
+
+                if (query.length > 0) {
+                    debounceTimer = setTimeout(() => {
+                        fetch(`/smart/search/?q=${encodeURIComponent(query)}`)
+                            .then(response => response.json())
+                            .then(data => {
+                                resultsContainer.innerHTML = "";
+                                if (data.results && data.results.length > 0) {
+                                    data.results.forEach(item => {
+                                        const div = document.createElement("div");
+                                        div.classList.add("search-item");
+                                        // Use an icon based on type (product/customer)
+                                        const iconClass = item.type === 'product' ? 'fa-box' : 'fa-user';
+
+                                        div.innerHTML = `<i class="fa-solid ${iconClass}"></i> 
+                                                     <div class="search-item-info">
+                                                        <span class="search-title">${item.name}</span>
+                                                        <span class="search-type">${item.type}</span>
+                                                     </div>`;
+
+                                        // Add click event if you want it to navigate somewhere
+                                        div.addEventListener('click', () => {
+                                            window.location.href = item.type === 'product' ? '/smart/products/' : '/smart/customers/';
+                                        });
+
+                                        resultsContainer.appendChild(div);
+                                    });
+                                    resultsContainer.style.display = "block";
+                                } else {
+                                    resultsContainer.innerHTML = `<div class="search-item">No results found</div>`;
+                                    resultsContainer.style.display = "block";
+                                }
+                            })
+                            .catch(err => {
+                                console.error("Search Error:", err);
+                            });
+                    }, 300); // Wait 300ms before making request
+                } else {
+                    resultsContainer.style.display = "none";
+                    resultsContainer.innerHTML = "";
+                }
+            });
+
+            // Hide dropdown if clicked outside
+            document.addEventListener("click", function (event) {
+                if (!searchInput.contains(event.target) && !resultsContainer.contains(event.target)) {
+                    resultsContainer.style.display = "none";
+                }
+            });
+
+            // Show dropdown again if typing inside search box
+            searchInput.addEventListener('focus', function () {
+                if (this.value.trim().length > 0 && resultsContainer.innerHTML !== "") {
+                    resultsContainer.style.display = "block";
+                }
+            });
+        });
+    </script>
+
+</body>
+
+</html>

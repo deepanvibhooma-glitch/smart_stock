@@ -1,0 +1,73 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Smart Stock - Customers</title>
+    <link rel="stylesheet" href="{% static 'customers2.css' %}">
+</head>
+<body>
+
+    {% include 'header.html' %}
+
+<div class="container">
+
+    <h1>Customers</h1>
+
+    <!-- Add Customer Form -->
+    <div class="card">
+        <h2>Add New Customer</h2>
+        <form method="POST">
+            {% csrf_token %}
+            <div class="form-grid">
+                <input type="text" name="name" placeholder="Full Name" required>
+                <input type="text" name="phone" placeholder="Phone Number" required>
+                <input type="email" name="email" placeholder="Email Address">
+                <button type="submit">Add Customer</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- All Customers List -->
+    <div class="card">
+        <h2>All Customers</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Phone</th>
+                    <th>Email</th>
+                    <th>Total Purchases</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for customer in customers %}
+                <tr>
+                    <td>{{ customer.name }}</td>
+                    <td>{{ customer.phone }}</td>
+                    <td>{{ customer.email }}</td>
+                    <td>{{ customer.total_purchases }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Regular Customers Section -->
+    <div class="card highlight">
+        <h2>Regular Customers</h2>
+        <div class="regular-list">
+            {% for customer in regular_customers %}
+            <div class="regular-card">
+                <h3>{{ customer.name }}</h3>
+                <p>{{ customer.phone }}</p>
+                <span>{{ customer.total_purchases }} purchases</span>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+</div>
+
+{% include 'footer.html' %}
+</body>
+</html>

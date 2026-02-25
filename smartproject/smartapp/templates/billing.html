@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>SmartStock Billing System</title>
+
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #F7F7F7;
+            /* var(--light-bg) */
+            margin: 0;
+            padding: 30px;
+            color: #2C2C2C;
+            /* var(--base-charcoal) */
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: auto;
+        }
+
+        h1 {
+            font-size: 28px;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        h2 {
+            font-size: 18px;
+            margin-bottom: 15px;
+            font-weight: 500;
+            color: #2C2C2C;
+        }
+
+        .card {
+            background: #ffffff;
+            padding: 20px;
+            margin-bottom: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        /* PAGE CONTROL */
+        .page {
+            display: none;
+        }
+
+        .active {
+            display: block;
+        }
+
+        .section {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+
+        /* OPTION BUTTONS */
+        .options {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 40px;
+            margin-bottom: 20px;
+        }
+
+        .option-btn {
+            padding: 40px 60px;
+            font-size: 18px;
+            border-radius: 10px;
+            border: 1px solid #e0e6ed;
+            background: #D4A5A5 ;
+            /* var(--bg-cream) */
+            color: #2C2C2C;
+            cursor: pointer;
+            transition: 0.2s ease;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.02);
+            font-weight: 600;
+        }
+
+        .option-btn:hover {
+            background: #B3A0B3;
+            /* var(--hover-lavender) */
+            border-color: #B3A0B3;
+            color: white;
+        }
+
+        /* FORM */
+        .form-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+            align-items: center;
+        }
+
+        input,
+        textarea {
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+            font-size: 14px;
+            flex: 1;
+        }
+
+        input:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #D4A5A5;
+            /* var(--primary-pink) */
+        }
+
+        textarea {
+            width: 100%;
+            height: 100px;
+            resize: vertical;
+        }
+
+        /* BUTTONS */
+        button {
+            padding: 10px 18px;
+            background: #303030;
+            /* var(--primary-pink) */
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: 0.2s ease;
+        }
+
+        button:hover {
+            background: #B3A0B3;
+            /* var(--hover-lavender) */
+        }
+
+        .delete-btn {
+            background: #ff4d4f;
+            padding: 8px 12px;
+        }
+
+        .delete-btn:hover {
+            background: #d9363e;
+        }
+
+        .back-btn {
+            background: #ffffff;
+            color: #555;
+            border: 1px solid #ddd;
+            margin-top: 20px;
+        }
+
+        .back-btn:hover {
+            background: #f5f5f5;
+        }
+
+        /* TABLE */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        th {
+            text-align: left;
+            padding: 12px;
+            font-size: 13px;
+            background: #D4A5A5;
+            color: white;
+            border-bottom: 1px solid #eee;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #f1f1f1;
+            font-size: 14px;
+            text-align: left;
+        }
+
+        tr:hover {
+            background: #fafafa;
+        }
+
+        .center {
+            text-align: center;
+        }
+
+        .generate-btn {
+            font-size: 16px;
+            padding: 12px 24px;
+        }
+
+        .summary-box {
+            border-left: 4px solid #D4A5A5;
+            background: #f0d6be;
+            /* var(--bg-cream) */
+            padding: 15px;
+            border-radius: 8px;
+            display: inline-block;
+            min-width: 250px;
+            margin-bottom: 20px;
+            border-left: 4px solid #D4A5A5;
+        }
+
+        .summary-box p {
+            margin: 5px 0;
+            font-size: 14px;
+        }
+
+        .summary-box b,
+        .summary-box span {
+            color: #5c6ac4;
+            font-weight: 600;
+            font-size: 16px;
+        }
+    </style>
+</head>
+
+<body>
+    {% include 'header.html' %}
+    <div class="container">
+
+        <h1>Billing Overview</h1>
+
+        <!-- ================= OPTIONS PAGE ================= -->
+
+        <div id="optionsPage" class="page active">
+            <div class="card">
+                <h2>Select Billing Mode</h2>
+                <div class="options">
+                    <button class="option-btn" onclick="showPage('normalPage')">
+                        🧾 Normal Billing
+                    </button>
+
+                    <button class="option-btn" onclick="showPage('chatPage')">
+                        💬 Chat Billing
+                    </button>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- ================= NORMAL BILLING ================= -->
+
+        <div id="normalPage" class="page">
+
+            <div class="card">
+                <h2>Normal Billing</h2>
+
+                <div class="form-row">
+                    <input type="text" id="customer" placeholder="Customer Name">
+                </div>
+
+                <div class="form-row">
+                    <input type="text" id="pname" placeholder="Product" style="flex:2;">
+                    <input type="number" id="qty" placeholder="Qty">
+                    <input type="number" id="price" placeholder="Price (₹)">
+                    <button onclick="addItem()" style="flex:0.5;">Add Item</button>
+                </div>
+
+                <table id="itemTable">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Qty</th>
+                            <th>Price (₹)</th>
+                            <th>Total (₹)</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+
+                <div class="center section">
+                    <button class="generate-btn" onclick="generateBill()">Generate Bill</button>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="summary-box">
+                    <h3>Daily Sales Summary</h3>
+                    <p>Total Customers: <b id="totalCustomers">0</b></p>
+                    <p>Total Sales Amount: ₹<span id="totalSales">0</span></p>
+                </div>
+
+                <div class="records section">
+                    <h3>Sales Records</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Bill No</th>
+                                <th>Customer</th>
+                                <th>Products</th>
+                                <th>Total Amount</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody id="salesBody"></tbody>
+                    </table>
+                </div>
+
+                <div class="center">
+                    <button class="back-btn" onclick="showPage('optionsPage')">⬅ Back to Mode Selection</button>
+                </div>
+            </div>
+
+        </div>
+
+
+
+        <!-- ================= CHAT BILLING ================= -->
+
+        <div id="chatPage" class="page">
+
+            <div class="card">
+                <h2>Chat Billing</h2>
+
+                <div class="form-row">
+                    <input type="text" id="chatCustomer" placeholder="Customer Name">
+                    <input type="text" id="chatid" placeholder="Instagram / WhatsApp ID">
+                </div>
+
+                <div class="form-row">
+                    <textarea id="chatItems"
+                        placeholder="Paste chat order here...&#10;Example:&#10;Saree 3 800&#10;Jeans 2 1200"></textarea>
+                </div>
+
+                <div class="center section">
+                    <button class="generate-btn" onclick="generateChatBill()">Generate Chat Bill</button>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="summary-box">
+                    <h3>Daily Chat Sales Summary</h3>
+                    <p>Total Customers: <b id="chatTotalCustomers">0</b></p>
+                    <p>Total Sales Amount: ₹<span id="chatTotalSales">0</span></p>
+                </div>
+
+                <div class="records section">
+                    <h3>Chat Sales Records</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Bill No</th>
+                                <th>Customer</th>
+                                <th>Chat ID</th>
+                                <th>Products</th>
+                                <th>Total Amount</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody id="chatSalesBody"></tbody>
+                    </table>
+                </div>
+
+                <div class="center">
+                    <button class="back-btn" onclick="showPage('optionsPage')">⬅ Back to Mode Selection</button>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <script>
+
+        /* PAGE SWITCH */
+
+        function showPage(pageId) {
+            document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+            document.getElementById(pageId).classList.add("active");
+        }
+
+
+        /* NORMAL BILLING */
+
+        let items = [];
+        let billCount = 1;
+        let totalSales = 0;
+        let totalCustomers = 0;
+
+        function addItem() {
+
+            let name = document.getElementById("pname").value;
+            let qty = parseInt(document.getElementById("qty").value);
+            let price = parseFloat(document.getElementById("price").value);
+
+            if (!name || !qty || !price) {
+                alert("Fill all fields");
+                return;
+            }
+
+            let total = qty * price;
+
+            items.push({ name, qty, price, total });
+
+            renderTable();
+
+            document.getElementById("pname").value = "";
+            document.getElementById("qty").value = "";
+            document.getElementById("price").value = "";
+        }
+
+        function renderTable() {
+
+            let html = "";
+
+            items.forEach((item, index) => {
+
+                html += `
+        <tr>
+            <td>${item.name}</td>
+            <td>${item.qty}</td>
+            <td>${item.price}</td>
+            <td>${item.total}</td>
+            <td><button class="delete-btn" onclick="deleteItem(${index})">Delete</button></td>
+        </tr>`;
+            });
+
+            document.querySelector("#itemTable tbody").innerHTML = html;
+        }
+
+        function deleteItem(index) {
+            items.splice(index, 1);
+            renderTable();
+        }
+
+        function generateBill() {
+
+            if (items.length === 0) {
+                alert("No items added");
+                return;
+            }
+
+            let customer = document.getElementById("customer").value;
+            if (!customer) {
+                alert("Customer Name is required");
+                return;
+            }
+
+            let payload = {
+                customer: customer,
+                items: items
+            };
+
+            fetch('/smart/save_bill/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        let subtotal = 0;
+                        let productList = "";
+
+                        items.forEach(item => {
+                            subtotal += item.total;
+                            productList += `${item.name} (x${item.qty})<br>`;
+                        });
+
+                        let tax = subtotal * 0.05;
+                        let grandTotal = subtotal + tax;
+                        let today = new Date().toLocaleDateString();
+
+                        document.getElementById("salesBody").innerHTML += `
+                <tr>
+                    <td>${String(billCount).padStart(2, '0')}</td>
+                    <td>${customer}</td>
+                    <td>${productList}</td>
+                    <td>₹${grandTotal.toFixed(2)}</td>
+                    <td>${today}</td>
+                </tr>
+            `;
+
+                        totalSales += grandTotal;
+                        totalCustomers++;
+
+                        document.getElementById("totalSales").innerText = totalSales.toFixed(2);
+                        document.getElementById("totalCustomers").innerText = totalCustomers;
+
+                        billCount++;
+
+                        items = [];
+                        renderTable();
+                        document.getElementById("customer").value = "";
+                        alert("Bill saved to database successfully!");
+                    } else {
+                        alert("Error saving bill: " + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                    alert("Failed to save bill to server.");
+                });
+        }
+
+
+
+        /* CHAT BILLING */
+
+        let chatBillCount = 1;
+        let chatTotalSales = 0;
+        let chatTotalCustomers = 0;
+
+        function generateChatBill() {
+
+            let customer = document.getElementById("chatCustomer").value;
+            let chatid = document.getElementById("chatid").value;
+            let text = document.getElementById("chatItems").value;
+
+            if (!customer || !text) {
+                alert("Fill all details");
+                return;
+            }
+
+            let lines = text.split("\n");
+
+            let chatItemsJson = [];
+
+            let subtotal = 0;
+            let productList = "";
+
+            lines.forEach(line => {
+                let parts = line.trim().split(" ");
+                if (parts.length >= 3) {
+                    let name = parts[0];
+                    let qty = parseInt(parts[1]);
+                    let price = parseFloat(parts[2]);
+                    let total = qty * price;
+
+                    chatItemsJson.push({ name, qty, price, total });
+                    subtotal += total;
+                    productList += `${name} (x${qty})<br>`;
+                }
+            });
+
+            let payload = {
+                customer: customer,
+                items: chatItemsJson
+            };
+
+            fetch('/smart/save_bill/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        let tax = subtotal * 0.05;
+                        let grandTotal = subtotal + tax;
+                        let today = new Date().toLocaleDateString();
+
+                        document.getElementById("chatSalesBody").innerHTML += `
+                <tr>
+                    <td>${String(chatBillCount).padStart(2, '0')}</td>
+                    <td>${customer}</td>
+                    <td>${chatid}</td>
+                    <td>${productList}</td>
+                    <td>₹${grandTotal.toFixed(2)}</td>
+                    <td>${today}</td>
+                </tr>
+            `;
+
+                        chatTotalSales += grandTotal;
+                        chatTotalCustomers++;
+
+                        document.getElementById("chatTotalSales").innerText = chatTotalSales.toFixed(2);
+                        document.getElementById("chatTotalCustomers").innerText = chatTotalCustomers;
+
+                        chatBillCount++;
+
+                        document.getElementById("chatCustomer").value = "";
+                        document.getElementById("chatid").value = "";
+                        document.getElementById("chatItems").value = "";
+                        alert("Chat bill processed and saved to database safely!");
+                    } else {
+                        alert("Error saving: " + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                    alert("Failed to communicate with the server.");
+                });
+        }
+
+    </script>
+
+    {% include 'footer.html' %}
+</body>
+
+</html>

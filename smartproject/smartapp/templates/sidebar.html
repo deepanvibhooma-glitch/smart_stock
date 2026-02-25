@@ -1,0 +1,33 @@
+{% load static %}
+<aside class="sidebar">
+    <div class="sidebar-logo">SmartStock</div>
+    <ul class="sidebar-menu">
+        <li class="{% if active_nav == 'home' %}active{% endif %}">
+            <a href="{% url 'landing' %}"><i class="fas fa-home"></i> Home</a>
+        </li>
+        <li class="{% if active_nav == 'dashboard' %}active{% endif %}">
+            <a href="{% url 'dashboard2' %}"><i class="fas fa-th-large"></i> Dashboard</a>
+        </li>
+        <li class="{% if active_nav == 'inventory' %}active{% endif %}">
+            <a href="{% url 'products2' %}"><i class="fas fa-box"></i> Inventory</a>
+        </li>
+        <li class="{% if active_nav == 'add_product' %}active{% endif %}">
+            <a href="{% url 'add_product_view' %}"><i class="fas fa-plus-circle"></i> Add Product</a>
+        </li>
+        <li class="{% if active_nav == 'categories' %}active{% endif %}">
+            <a href="{% url 'categories_view' %}"><i class="fas fa-folder"></i> Categories</a>
+        </li>
+        <li class="{% if active_nav == 'customers' %}active{% endif %}">
+            <a href="{% url 'customers2' %}"><i class="fas fa-users"></i> Customers</a>
+        </li>
+        <li class="{% if active_nav == 'billing' %}active{% endif %}">
+            <a href="{% url 'billing2' %}"><i class="fas fa-file-invoice-dollar"></i> Billing</a>
+        </li>
+        <li class="{% if active_nav == 'settings' %}active{% endif %}">
+            <a href="{% url 'settings_view' %}"><i class="fas fa-cog"></i> Settings</a>
+        </li>
+        <li style="margin-top: auto; padding-top: 20px;">
+            <a href="{% url 'logout' %}" style="color: #ef4444;"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        </li>
+    </ul>
+</aside>
